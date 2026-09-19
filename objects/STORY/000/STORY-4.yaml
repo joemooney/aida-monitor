@@ -21,10 +21,18 @@ priority: Medium
 owner: ''
 feature: Uncategorized
 created_at: 2026-09-19T18:56:57.168638714Z
-modified_at: 2026-09-19T20:58:02.351295795Z
+modified_at: 2026-09-19T21:06:27.845996554Z
 req_type: Story
 tags:
 - gate
 - process-attribution
 - ui
 execution_mode: drain
+failure_reason:
+  phase: reviewer
+  phase_index: 3
+  kind: tool-exit
+  detail: the reviewer session exited 1 (attempt 2/2)
+  recovery_hint: 'Address the review feedback, then push fixups: `aida queue rework STORY-4 --work`'
+  shelved_by: advisor
+  shelved_at: 2026-09-19T21:06:27.845996554Z
