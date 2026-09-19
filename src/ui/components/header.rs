@@ -1,5 +1,6 @@
 // trace:STORY-1 | ai:antigravity
 // trace:TASK-2 | ai:antigravity
+// trace:STORY-10 | ai:antigravity
 use crate::core::models::ApiGuardState;
 use dioxus::prelude::*;
 
@@ -12,6 +13,7 @@ pub fn Header(
     active_tab: Signal<String>,
     search_query: Signal<String>,
     interval_secs: Signal<u64>,
+    zoom_level: Signal<f32>,
     api_guard: ApiGuardState,
     is_refreshing: bool,
     on_refresh: EventHandler<()>,
@@ -63,6 +65,21 @@ pub fn Header(
                                 class: if interval_secs() == 0 { "interval-btn active" } else { "interval-btn" },
                                 onclick: move |_| interval_secs.set(0),
                                 "Pause"
+                            }
+                        }
+                    }
+
+                    {
+                        let zoom_pct = (zoom_level() * 100.0).round() as u32;
+                        rsx! {
+                            button {
+                                class: if zoom_pct != 100 { "zoom-pill active mono" } else { "zoom-pill mono" },
+                                title: "Zoom: Ctrl + Scroll or Ctrl +/-. Click to reset (100%).",
+                                onclick: move |_| zoom_level.set(1.0),
+                                "🔍 {zoom_pct}%"
+                                if zoom_pct != 100 {
+                                    span { style: "font-size: 10px; margin-left: 2px;", "↺" }
+                                }
                             }
                         }
                     }

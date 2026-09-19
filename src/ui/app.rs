@@ -1,5 +1,6 @@
 // trace:STORY-1 | ai:antigravity
 // trace:TASK-2 | ai:antigravity
+// trace:STORY-10 | ai:antigravity
 use super::components::ci_panel::CiPanel;
 use super::components::event_drawer::EventDrawer;
 use super::components::gate_panel::GatePanel;
@@ -34,6 +35,7 @@ pub fn App(props: AppProps) -> Element {
     let active_tab = use_signal(|| "overview".to_string());
     let search_query = use_signal(|| "".to_string());
     let interval_secs = use_signal(|| 30u64);
+    let mut zoom_level = use_signal(|| 1.0f32);
     let mut is_refreshing = use_signal(|| false);
     let mut last_manual_refresh = use_signal(|| None::<std::time::Instant>);
 
@@ -137,7 +139,39 @@ pub fn App(props: AppProps) -> Element {
     rsx! {
         style { "{DASHBOARD_CSS}" }
 
-        div { class: "app-container",
+        div {
+            class: "app-container",
+            tabindex: "0",
+            autofocus: true,
+            style: "zoom: {zoom_level()}; outline: none;",
+            onkeydown: move |evt| {
+                let modifiers = evt.modifiers();
+                if modifiers.ctrl() || modifiers.meta() {
+                    match evt.key() {
+                        Key::Character(ref c) if c == "+" || c == "=" => {
+                            zoom_level.with_mut(|z| *z = (*z + 0.1).min(2.0));
+                        }
+                        Key::Character(ref c) if c == "-" || c == "_" => {
+                            zoom_level.with_mut(|z| *z = (*z - 0.1).max(0.5));
+                        }
+                        Key::Character(ref c) if c == "0" => {
+                            zoom_level.set(1.0);
+                        }
+                        _ => {}
+                    }
+                }
+            },
+            onwheel: move |evt| {
+                let modifiers = evt.modifiers();
+                if modifiers.ctrl() || modifiers.meta() {
+                    let delta_y = evt.delta().strip_units().y;
+                    if delta_y < -0.1 {
+                        zoom_level.with_mut(|z| *z = (*z + 0.05).min(2.0));
+                    } else if delta_y > 0.1 {
+                        zoom_level.with_mut(|z| *z = (*z - 0.05).max(0.5));
+                    }
+                }
+            },
             Header {
                 project_name: current.project_name.clone(),
                 project_path: current.project_path.clone(),
@@ -146,6 +180,7 @@ pub fn App(props: AppProps) -> Element {
                 active_tab,
                 search_query,
                 interval_secs,
+                zoom_level,
                 api_guard: current.api_guard.clone(),
                 is_refreshing: is_refreshing(),
                 on_refresh,

@@ -1,5 +1,6 @@
 // trace:STORY-1 | ai:antigravity
 // trace:TASK-2 | ai:antigravity
+// trace:STORY-10 | ai:antigravity
 use clap::Parser;
 use dioxus::prelude::*;
 use std::path::PathBuf;
@@ -84,7 +85,7 @@ fn main() {
     #[cfg(feature = "desktop")]
     {
         use dioxus::desktop::{Config, WindowBuilder};
-        let cfg = Config::new().with_window(
+        let cfg = Config::new().with_menu(None).with_window(
             WindowBuilder::new()
                 .with_title("AIDA Monitor — Operator Dashboard")
                 .with_inner_size(dioxus::desktop::tao::dpi::LogicalSize::new(1380.0, 880.0)),

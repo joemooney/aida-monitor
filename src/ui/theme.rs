@@ -1,5 +1,6 @@
 // trace:STORY-1 | ai:antigravity
 // trace:TASK-2 | ai:antigravity
+// trace:STORY-10 | ai:antigravity
 
 pub const DASHBOARD_CSS: &str = r#"
 :root {
@@ -242,6 +243,35 @@ body {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+/* Zoom Pill */
+.zoom-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.zoom-pill:hover {
+  background: var(--bg-surface);
+  color: var(--color-cyan);
+  border-color: var(--color-cyan);
+}
+
+.zoom-pill.active {
+  color: var(--color-cyan);
+  border-color: rgba(6, 182, 212, 0.4);
+  background: rgba(6, 182, 212, 0.1);
 }
 
 /* API Guard Pill */
