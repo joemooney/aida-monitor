@@ -4,25 +4,25 @@ agreed_id: TASK-5
 title: Persist feed byte cursor and generate since-you-were-away digest
 description: |-
   ## Problem
-  1. When the monitor is stopped and restarted, re-reading the entire feed from the beginning risks re-announcing historical events as if they just happened.
-  2. An operator returning to their desk needs a concise summary of what happened while away without having to read hundreds of raw event log lines.
+  1. When the monitor is stopped and restarted, re-reading the entire event feed from the beginning risks re-announcing historical events as if they just occurred.
+  2. An operator returning to their station needs a concise summary of what happened while away without manually inspecting hundreds of raw events.
 
   ## Proposed Solution
-  1. Persist a local reader cursor (.aida-monitor/cursor.json or local data dir) recording last_byte_offset and last_seen_ts.
-  2. On startup, initialize the feed tail from the end of the file or saved cursor.
-  3. Provide a 'Since You Were Away' catch-up digest summarizing all terminal events (CiTerminal, PrMerged, SpecShelved, AdvisorEscalated) since the marked timestamp.
+  1. Persist a local reader cursor outside the monitored project (e.g. in `~/.local/state/aida-monitor/cursor.json` or standard platform cache/state dir) recording `last_byte_offset` and `last_seen_ts`, respecting Prime Directive 1 (zero writes to monitored project).
+  2. On startup, initialize the feed tail from the persisted cursor or EOF for new instances.
+  3. Provide a 'Since You Were Away' catch-up digest summarizing terminal events (CiTerminal, PrMerged, SpecShelved, AdvisorEscalated) that occurred during the elapsed interval.
 
   ## Acceptance Criteria
   - [ ] Feed tailer starts at EOF or persisted byte cursor on cold startup; does not replay historical events.
-  - [ ] Local cursor persists cleanly without modifying any target project files.
-  - [ ] 'Since You Were Away' banner/drawer displays count of merges, red CIs, and shelves since the operator's last session.
-  - [ ] Works in both Dioxus GUI and --plain terminal mode.
-status: Draft
+  - [ ] Local cursor persists in user state directory (never inside target project, preserving Prime Directive 1).
+  - [ ] 'Since You Were Away' digest displays counts of merges, red CIs, and shelves since the operator's last session.
+  - [ ] Operates seamlessly in both Dioxus GUI and `--plain` terminal mode.
+status: Approved
 priority: Medium
 owner: ''
 feature: Uncategorized
 created_at: 2026-09-19T18:57:02.418829313Z
-modified_at: 2026-09-19T18:57:02.418829313Z
+modified_at: 2026-09-19T20:17:31.245670311Z
 req_type: Task
 tags:
 - cursor

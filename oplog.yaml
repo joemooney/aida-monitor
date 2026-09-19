@@ -243,5 +243,35 @@ operations:
       - [ ] Displays recorded review verdicts via `aida review verdict <SPEC> --format json`.
       - [ ] Complies with Prime Directives 2 & 3: CLI JSON consumption only, no direct internal file reads.
       - [ ] Self-check verifies PID and held count against raw CLI JSON.
-clock: 16
+- id: 01a0bb51-207c-7041-855e-c06ee3bda446
+  target_id: 01a0bb07-71d2-7e71-9002-02a59faa92be
+  author: aida
+  node_id: ''
+  lamport: 17
+  timestamp: 2026-09-19T20:17:31.260882060Z
+  kind: !SetStatus
+    status: Approved
+- id: 01a0bb51-207d-7ed2-a15e-0f3ba875a968
+  target_id: 01a0bb07-71d2-7e71-9002-02a59faa92be
+  author: aida
+  node_id: ''
+  lamport: 18
+  timestamp: 2026-09-19T20:17:31.261510320Z
+  kind: !SetDescription
+    description: |-
+      ## Problem
+      1. When the monitor is stopped and restarted, re-reading the entire event feed from the beginning risks re-announcing historical events as if they just occurred.
+      2. An operator returning to their station needs a concise summary of what happened while away without manually inspecting hundreds of raw events.
+
+      ## Proposed Solution
+      1. Persist a local reader cursor outside the monitored project (e.g. in `~/.local/state/aida-monitor/cursor.json` or standard platform cache/state dir) recording `last_byte_offset` and `last_seen_ts`, respecting Prime Directive 1 (zero writes to monitored project).
+      2. On startup, initialize the feed tail from the persisted cursor or EOF for new instances.
+      3. Provide a 'Since You Were Away' catch-up digest summarizing terminal events (CiTerminal, PrMerged, SpecShelved, AdvisorEscalated) that occurred during the elapsed interval.
+
+      ## Acceptance Criteria
+      - [ ] Feed tailer starts at EOF or persisted byte cursor on cold startup; does not replay historical events.
+      - [ ] Local cursor persists in user state directory (never inside target project, preserving Prime Directive 1).
+      - [ ] 'Since You Were Away' digest displays counts of merges, red CIs, and shelves since the operator's last session.
+      - [ ] Operates seamlessly in both Dioxus GUI and `--plain` terminal mode.
+clock: 18
 node_id: ''
