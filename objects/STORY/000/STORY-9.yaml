@@ -18,12 +18,12 @@ description: |-
   - [ ] Header includes an interactive project switcher dropdown showing available projects.
   - [ ] Selecting a project dynamically switches all panels and the live event feed to the selected project.
   - [ ] Maintains Prime Directive 1 (zero writes to any target project) and Directive 4 (degrade gracefully if `projects.toml` is missing or malformed).
-status: Approved
+status: InProgress
 priority: Medium
 owner: ''
 feature: Uncategorized
 created_at: 2026-09-19T20:23:11.365924938Z
-modified_at: 2026-09-19T20:23:56.848888115Z
+modified_at: 2026-09-19T21:12:57.340971095Z
 req_type: Story
 tags:
 - effort:open:1h
