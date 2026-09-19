@@ -17,7 +17,7 @@ description: |-
   - [ ] Local cursor persists in user state directory (never inside target project, preserving Prime Directive 1).
   - [ ] 'Since You Were Away' digest displays counts of merges, red CIs, and shelves since the operator's last session.
   - [ ] Operates seamlessly in both Dioxus GUI and `--plain` terminal mode.
-status: InProgress
+status: Done
 priority: Medium
 owner: ''
 feature: Uncategorized
