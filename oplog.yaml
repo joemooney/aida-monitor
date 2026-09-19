@@ -1,0 +1,15 @@
+operations:
+- id: 01a0bade-f852-7613-a3d1-8c92ca395975
+  target_id: 01a0bade-eedf-73b1-a193-f542ec9a3b28
+  author: aida
+  node_id: ''
+  lamport: 1
+  timestamp: 2026-09-19T18:12:49.874251927Z
+  kind: !Create
+    title: Build professional Dioxus operator dashboard for aida-monitor
+    description: Implement read-only operator dashboard in Dioxus Rust, supporting rounds in flight, phase clock, at the gate, shelve causes, queue and lock, CI, seat responsiveness, --self-check, and plain text mode
+    req_type: Story
+    status: Approved
+    priority: Medium
+clock: 1
+node_id: ''
