@@ -86,5 +86,29 @@ operations:
     req_type: Story
     status: Draft
     priority: High
-clock: 7
+- id: 01a0bb07-5f6b-72e2-8c95-3f4a4ebfe7ed
+  target_id: 01a0bb07-5d50-7b91-813d-04099e4200b7
+  author: aida
+  node_id: ''
+  lamport: 8
+  timestamp: 2026-09-19T18:56:57.707413804Z
+  kind: !Create
+    title: Identify active agent processes on held PRs at the gate
+    description: |-
+      ## Problem
+      When a pull request is held at the gate (aida merge-hold list), an operator cannot immediately tell whether an autonomous reviewer process is actively reviewing it or has halted. Merging without this knowledge risks merging seconds before a reviewer's objection is posted.
+
+      ## Proposed Solution
+      Join aida merge-hold list --json with aida ps --json (and aida drain status --json) to correlate held PR branches/specs with active agent processes and display reviewer status, latest finding snippet, and advisor verdict.
+
+      ## Acceptance Criteria
+      - [ ] At The Gate panel matches held PR spec/branch with active session in aida ps.
+      - [ ] Shows live indicator: Reviewer Active (PID <pid>, <elapsed>) vs Idle / Awaiting Human.
+      - [ ] Displays the first line of the most recent reviewer finding from .aida/harvest/ or aida findings list.
+      - [ ] Displays the most recent advisor verdict (.aida/review-verdicts/).
+      - [ ] Self-check verifies PID and held count against raw CLI JSON.
+    req_type: Story
+    status: Draft
+    priority: Medium
+clock: 8
 node_id: ''
