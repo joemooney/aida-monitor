@@ -1,0 +1,9 @@
+blocks:
+- node_id: JM
+  owner: redacted@node.invalid
+  hostname: imac
+  type_prefix: '*'
+  range_start: 1
+  range_end: 1000
+  next: 1
+  allocated_at: 2026-09-19T17:55:46.909346057Z
