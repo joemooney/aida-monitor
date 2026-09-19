@@ -136,5 +136,29 @@ operations:
     req_type: Task
     status: Draft
     priority: Medium
-clock: 9
+- id: 01a0bb07-8942-7280-994a-6c22d9aaefd5
+  target_id: 01a0bb07-877c-7190-ab70-e6060070da18
+  author: aida
+  node_id: ''
+  lamport: 10
+  timestamp: 2026-09-19T18:57:08.418630133Z
+  kind: !Create
+    title: Inspect per-spec and per-round token usage from session logs
+    description: |-
+      ## Problem
+      AIDA core CLI commands do not expose token usage metrics, but headless drain logs under .aida/headless-logs/ and .aida/burndown/ contain JSONL message_delta events with token usage (input_tokens, cache_creation_input_tokens, cache_read_input_tokens, output_tokens).
+
+      ## Proposed Solution
+      A passive, non-blocking background scanner that attributes token consumption to specs and rounds based on log filenames (<spec>-<uuid>.jsonl). Clearly mark the panel as best-effort / derived from agent logs per the project brief.
+
+      ## Acceptance Criteria
+      - [ ] Reads .aida/headless-logs/ in a read-only, non-blocking background thread.
+      - [ ] Aggregates input tokens, cache reads/writes, and output tokens per spec.
+      - [ ] Visually labeled as 'Best-Effort (Agent Vendor Logs)' to indicate it is not guaranteed by core AIDA commands.
+      - [ ] Degrades gracefully to empty/neutral state if .aida/headless-logs/ does not exist or format changes.
+      - [ ] Never blocks UI rendering or CLI command execution.
+    req_type: Story
+    status: Draft
+    priority: Low
+clock: 10
 node_id: ''
