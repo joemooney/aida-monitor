@@ -1,0 +1,6 @@
+schema = 1
+
+[project]
+name = "aida-monitor"
+description = "One-line project description."
+why = "aida needs a monitoring tool that helps a human understand how any autonmous work is progressing"

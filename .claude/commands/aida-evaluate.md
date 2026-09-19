@@ -1,0 +1,24 @@
+---
+description: "Evaluate a requirement's quality using AI analysis."
+---
+<!-- AIDA Generated: v2.0.0 | checksum:bd4a508d | DO NOT EDIT DIRECTLY -->
+<!-- To customize: copy this file and modify the copy -->
+
+# Evaluate AIDA Requirement
+
+Evaluate a requirement's quality using AI analysis.
+
+## Usage
+
+```
+/aida-evaluate <SPEC-ID>
+```
+
+## Instructions
+
+Follow the workflow in `.claude/skills/aida-evaluate/SKILL.md`:
+
+1. Load the requirement from the database using `aida show <SPEC-ID>`
+2. Run AI evaluation for clarity, testability, completeness, and consistency
+3. Display the quality score and any issues found
+4. Offer follow-up actions: improve description, split into children, or accept as-is

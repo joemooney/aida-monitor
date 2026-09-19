@@ -1,0 +1,259 @@
+# AIDA distributed mode configuration
+[deployment]
+mode = "distributed"
+store_path = ".aida-store"
+store_type = "worktree"
+branch = "aida-store"
+
+[store.sync]
+# Auto-push store commits after local writes. Values: manual,
+# session-end, per-write, periodic. `periodic` is reserved until
+# aida-worker (EPIC-30) ships.
+auto_push = "manual"
+
+# trace:EPIC-1-052 Phase 2 | ai:claude
+# How `aida add` chooses between agreed-id blocks and node-aware ids:
+#   node-aware-only      — never use blocks; always FR-<NODE>-<SEQ>
+#   blocks-then-fallback — try block first; fall through silently (default)
+#   blocks-only          — error if no block is allocated for the type
+#
+# counter_scope (FR-271):
+#   global               — single counter shared across all types (default for new projects)
+#                          → FR-1, BUG-2, EPIC-3, ... ids globally unique by number
+#   per-type             — separate counter per type prefix (legacy default)
+#                          → FR-1, BUG-1, EPIC-1, ... each type starts fresh
+[id_format]
+policy = "blocks-then-fallback"
+counter_scope = "global"
+
+# trace:TASK-281 | ai:claude
+# Auto-claim a fresh block when aggregate remaining IDs drop below
+# threshold. On by default (threshold 20, size 100). Opt out with:
+#   [block_allocation]
+#   auto_claim = false
+# Per-type override (e.g. larger BUG blocks):
+#   [block_allocation.bug]
+#   auto_claim_threshold = 50
+#   auto_claim_size = 200
+
+# trace:EPIC-35 | ai:claude
+# Which forge backs the PR/MR + CI lifecycle. Auto-detected from the
+# origin host at init: github.com -> github, gitlab.* -> gitlab,
+# otherwise pure-git (works direct-to-default-branch; merge = git
+# ancestry + (SPEC-ID)-trailer auto-complete, no forge needed).
+[forge]
+provider = "pure-git"
+
+# trace:TASK-304 | ai:claude  (suggest_threshold: trace:TASK-697)
+# Whether AIDA proactively suggests `aida ultraplan <SPEC>` for specs
+# where planning would help. Planning is human/agent driven, so there
+# is no "auto-pull" mode — only:
+#   never      — `aida ultraplan` is disabled (refuses with a message)
+#   on-demand  — current behavior: run `aida ultraplan SPEC` yourself
+#   suggested  — pickup surfaces (/aida-pickup, queue work/list head)
+#                hint when the head spec passes suggest_threshold
+# suggest_threshold only applies in `suggested` mode. Heuristics:
+#   spec-thinness       — (default) suggest when the spec is
+#                         under-specified: no design section (## Proposed
+#                         shape / Design / Approach / ...) yet a
+#                         substantive body. Well-specified specs already
+#                         carry their plan, so they stay quiet (SPIKE-8).
+#   acceptance-bullets>N — (legacy) suggest when the `## Acceptance`
+#                         checkbox count exceeds N. Note: bullet count
+#                         anti-correlates with where planning helps.
+[ultraplan]
+mode = "on-demand"
+suggest_threshold = "spec-thinness"
+
+# Policy for `aida intake` — the headless advisor pass that reads open
+# specs and proposes approve/reject/park/queue dispositions (propose-only
+# by default; `--apply` executes). Every knob has a safe default, so this
+# whole section is optional — uncomment a line only to change a default.
+#
+# disposition_bias — how aggressively the agent proposes approve:
+#   approve-eligible  — (default) propose approve for every eligible
+#                       spec; the propose-mode review is the filter
+#   park-aligned      — approve only when a spec is BOTH eligible AND
+#                       clearly aligned with project priorities; else
+#                       park for a human
+#   park-conservative — park whenever unsure
+#
+# do_not_approve_classes — requirement types the agent can NEVER propose
+# approve for; they are fenced out of its candidate set entirely. The
+# default is the strategic + knowledge-graph types. An empty list opens
+# the gate (the propose-mode review still applies).
+#
+# on_apply — what `--apply` does after queuing approved specs:
+#   queue — (default) stop at queuing; draining stays a separate,
+#           explicit command
+#   drain — chain straight into an implementer drain after queuing
+#
+# [intake]
+# disposition_bias = "approve-eligible"
+# do_not_approve_classes = ["vision", "epic", "principle", "constraint", "decision", "term"]
+# on_apply = "queue"
+
+# Authority envelope for advisor autopilot (`aida autopilot`). Autopilot is
+# not a second disposition engine — it is a bounded-authority wrapper over
+# the same grooming pass `[intake]` above configures. For each disposition
+# the advisor proposes, the envelope decides one of: auto-execute, hold for
+# a human, or escalate. Every knob has a conservative default, so this whole
+# section is optional — uncomment a line only to change a default.
+#
+# One key per action class; each takes one of three values:
+#   auto    — autopilot may perform the action on its own
+#   propose — autopilot may only propose it; a human reviews before it runs
+#   never   — autopilot may never perform it
+#
+# Defaults: the reversible, low-blast actions are `auto`; the two
+# irreversible dispositions (approve, reject) are `propose`. An unknown key
+# or an unknown value is ignored, leaving that action at its default.
+#
+# These knobs are a CEILING, not a blanket grant. Three bounds sit OUTSIDE
+# the map and cannot be widened here:
+#   * the candidate fence — which specs are touchable at all (`[intake]`);
+#   * grounding — a call resting on judgment a freshly-started agent cannot
+#     reconstruct from what is written down always escalates;
+#   * the risk ceiling — high-risk and unknown-blast-radius work always
+#     escalates.
+# Context can only TIGHTEN the envelope, never widen it: an unattended run
+# demotes every `propose` to `never` (nobody is there to be asked), and an
+# active solo posture on keystone work demotes everything to `never`.
+#
+# What the envelope drives today: `aida autopilot inspect` — a read-only
+# dry-run of what autopilot WOULD decide over the current groom candidates,
+# recorded to a local audit log you can review (`aida autopilot audit`) and
+# reverse (`aida autopilot challenge`) — and the draft approve-gate on
+# `aida zen <spec>`. There is deliberately NO autopilot execution path on
+# the grooming pass itself yet, so widening a key below changes those two
+# surfaces and nothing else.
+#
+# [autopilot]
+# approve = "propose"
+# reject = "propose"
+# dedupe = "auto"
+# tag = "auto"
+# queue = "auto"
+# park = "auto"
+# route = "auto"
+# comment = "auto"
+# ask = "auto"
+
+# Worktree creation. AIDA initializes recursive git submodules by default
+# after creating or claiming a worktree, so repos that vendor dependencies
+# through `.gitmodules` are build-ready before pickup succeeds. Set this
+# false to skip the potentially-expensive init; AIDA will print the exact
+# recovery command when `.gitmodules` is present.
+[worktree]
+init_submodules = true
+
+# Worktree warm-pool (STORY-714). Pooling is ON by default: a session's
+# worktree is acquired from a recycled pool and RESET (not deleted) on
+# hand-back, so its compiled `target/` stays warm across fan-out. Escape
+# hatches: set `enabled = false` here, pass `--no-pool` to a single
+# `aida session start`, or pass `--remove` to `aida session end` to delete
+# the worktree instead of returning it.
+[worktree_pool]
+enabled = true
+
+[scaffold]
+footprint = "full"
+
+[agents]
+enabled = ["claude", "codex", "antigravity"]
+# max_trees = 16   # cap on pooled worktrees (default 16)
+# lease_ttl_secs = 21600   # a durable lease older than this (with no live
+#                          # owner) is treated as EXPIRED and reclaimed by
+#                          # the next acquire — guards against reservation
+#                          # leaks when a session dies (default 6h)
+#
+# Pre-warm on create: set `prewarm_build = true` to kick off a backgrounded
+# `cargo build` when a NEW pool tree is created, so its `target/` is warm
+# before the first fanned agent builds in it (best-effort, non-blocking).
+# Like every worktree-pool hook, this executes a build, so it is honored
+# ONLY from your machine-global `~/.aida/config.toml` — never a checked-in
+# repo config — and is ignored here.
+
+# Per-seat job registry (`aida schedule`, alias `aida cron`). Two job kinds:
+#   substrate — `command = "<allow-listed aida subcommand>"`; no LLM; run by
+#               `aida schedule tick` (the per-turn hook) or real cron
+#               (`aida schedule emit-cron`). Idempotent, quiet when idle.
+#   seat      — `prompt = "..."`, `seats = ["advisor"]`; needs the seat's
+#               judgment; NEVER executed by the scheduler. It becomes due and
+#               is delivered to whoever holds the seat (`aida awaiting
+#               --notice`, the pickup prompt, `aida agent new`); the seat
+#               reports back with `aida schedule done <job>`.
+# Schedules (combine `every` + `on` for event fast path + interval fallback):
+#   every = "30m"                       interval heartbeat
+#   on    = ["PrMerged", "MailReceived"] events from .aida/events.jsonl
+#   when  = "mail.oldest_unread_age > 15m"   predicate; fires once per episode
+# Machine-wide jobs go in ~/.aida/schedule.toml (same shape); a project entry
+# with the same name wins. Every run is ledgered on the aida-store branch
+# (schedule/<job>.yaml). Fresh projects stay silent: every sample is commented.
+# trace:STORY-1047 trace:STORY-1226
+#
+# [schedule]
+# min_gap = "60s"
+#
+# [[schedule.jobs]]
+# name = "session-reap"
+# command = "session reap"
+# every = "30m"
+# enabled = false
+#
+# [[schedule.jobs]]
+# name = "doctor"
+# command = "doctor"
+# every = "6h"
+# enabled = false
+#
+# [[schedule.jobs]]
+# name = "queue-gc"
+# command = "queue gc"
+# every = "2h"
+# enabled = false
+#
+# [[schedule.jobs]]
+# name = "cache-verify"
+# command = "cache verify"
+# every = "24h"
+# enabled = false
+#
+# [[schedule.jobs]]
+# name = "mailbox-latency"
+# command = "notify check"
+# when = "mail.oldest_unread_age > 15m"
+# enabled = false
+#
+# [[schedule.jobs]]
+# name = "mailbox-triage"
+# seats = ["advisor"]
+# every = "30m"
+# on = ["MailReceived"]
+# prompt = "Triage the mailbox: `aida mailbox inbox`, answer or route each item."
+# enabled = false
+#
+# [[schedule.jobs]]
+# name = "groom-drafts"
+# seats = ["advisor"]
+# every = "1h"
+# prompt = "Groom the draft inbox: `aida groom` (propose), then `aida groom --apply`."
+# enabled = false
+#
+# [[schedule.jobs]]
+# name = "capture-sweep"
+# seats = ["product"]
+# on = ["QueueDrained"]
+# prompt = "Run /aida-capture: file every requirement the drain surfaced but nobody wrote down."
+# enabled = false
+#
+
+# Store-sync fan-out (STORY-760). By default `aida db sync --push` (and the
+# auto-push paths) push the orphan store ONLY to `origin`. List extra remote
+# names here to mirror every store push to additional hubs (e.g. a personal
+# GitLab), so a clone can't silently leave one remote behind. Best-effort: a
+# non-fast-forward or unreachable mirror leg WARNS and is skipped — it never
+# fails the sync. Check drift anytime with `aida remote status`.
+#
+# [store.sync]
+# mirror_remotes = ["gitlab"]
