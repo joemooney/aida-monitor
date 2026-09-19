@@ -16,12 +16,12 @@ description: |-
   - [ ] Displays recorded review verdicts via `aida review verdict <SPEC> --format json`.
   - [ ] Complies with Prime Directives 2 & 3: CLI JSON consumption only, no direct internal file reads.
   - [ ] Self-check verifies PID and held count against raw CLI JSON.
-status: Approved
+status: InProgress
 priority: Medium
 owner: ''
 feature: Uncategorized
 created_at: 2026-09-19T18:56:57.168638714Z
-modified_at: 2026-09-19T20:42:09.142273586Z
+modified_at: 2026-09-19T20:58:02.351295795Z
 req_type: Story
 tags:
 - gate
