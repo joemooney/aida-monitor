@@ -27,10 +27,11 @@ priority: High
 owner: ''
 feature: Uncategorized
 created_at: 2026-09-19T18:56:38.958999876Z
-modified_at: 2026-09-19T20:17:23.166990370Z
+modified_at: 2026-09-19T20:42:07.636869942Z
 req_type: Story
 tags:
 - funnel
 - pipeline
 - swimlane
 - ui
+execution_mode: drain
