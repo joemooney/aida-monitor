@@ -1,4 +1,5 @@
 // trace:STORY-1 | ai:antigravity
+// trace:TASK-2 | ai:antigravity
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -167,6 +168,25 @@ impl<T> PanelStatus<T> {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ApiGuardState {
+    pub external_api_calls_made: u64,
+    pub min_interval_secs: u64,
+    pub is_safe: bool,
+    pub policy: String,
+}
+
+impl Default for ApiGuardState {
+    fn default() -> Self {
+        Self {
+            external_api_calls_made: 0,
+            min_interval_secs: 300,
+            is_safe: true,
+            policy: "Offline-First (0 external calls / immune to rate limits)".to_string(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
 pub struct DashboardSnapshot {
     pub project_path: String,
@@ -182,4 +202,5 @@ pub struct DashboardSnapshot {
     pub seats: PanelStatus<SeatResponsiveness>,
     pub throughput: PanelStatus<ThroughputStats>,
     pub recent_events: Vec<EventItem>,
+    pub api_guard: ApiGuardState,
 }

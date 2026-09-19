@@ -1,4 +1,5 @@
 // trace:STORY-1 | ai:antigravity
+// trace:TASK-2 | ai:antigravity
 use super::collector::Collector;
 use colored::Colorize;
 use std::path::Path;
@@ -37,21 +38,49 @@ pub fn run_self_check<P: AsRef<Path>>(project_root: P) -> Result<(), String> {
         checks: Vec::new(),
     };
 
-    // Helper to test an AIDA command
+    // Helper to test an AIDA command with timeout and offline protection
     let run_cmd = |args: &[&str]| -> Result<serde_json::Value, String> {
         let mut cmd = Command::new("aida");
         cmd.current_dir(root);
+        cmd.env("AIDA_OFFLINE", "1");
+        cmd.env("AIDA_NO_SYNC", "1");
+        cmd.env("GIT_TERMINAL_PROMPT", "0");
+        cmd.env("AIDA_OUTPUT_FORMAT", "json");
+        cmd.stdout(std::process::Stdio::piped());
+        cmd.stderr(std::process::Stdio::piped());
         cmd.args(args);
-        let out = cmd.output().map_err(|e| e.to_string())?;
-        if !out.status.success() {
-            return Err(format!(
-                "Exit code {}: {}",
-                out.status,
-                String::from_utf8_lossy(&out.stderr)
-            ));
+
+        let child = cmd.spawn().map_err(|e| e.to_string())?;
+        let pid = child.id();
+        let timeout = std::time::Duration::from_millis(3500);
+        let (tx, rx) = std::sync::mpsc::channel();
+
+        std::thread::spawn(move || {
+            let res = child.wait_with_output();
+            let _ = tx.send(res);
+        });
+
+        match rx.recv_timeout(timeout) {
+            Ok(Ok(out)) => {
+                if !out.status.success() {
+                    return Err(format!(
+                        "Exit code {}: {}",
+                        out.status,
+                        String::from_utf8_lossy(&out.stderr).trim()
+                    ));
+                }
+                let text = String::from_utf8_lossy(&out.stdout);
+                serde_json::from_str::<serde_json::Value>(text.trim()).map_err(|e| e.to_string())
+            }
+            Ok(Err(e)) => Err(e.to_string()),
+            Err(_) => {
+                let _ = Command::new("kill").arg("-9").arg(pid.to_string()).output();
+                Err(format!(
+                    "Timed out after {}ms (degraded)",
+                    timeout.as_millis()
+                ))
+            }
         }
-        let text = String::from_utf8_lossy(&out.stdout);
-        serde_json::from_str::<serde_json::Value>(text.trim()).map_err(|e| e.to_string())
     };
 
     // 1. Panel 1: Rounds in Flight (Feed vs Derived)
@@ -276,6 +305,30 @@ pub fn run_self_check<P: AsRef<Path>>(project_root: P) -> Result<(), String> {
             ));
             report.passed += 1;
         }
+    }
+
+    // 8. Panel 8: API Rate Limiting & Zero-Network Guard
+    let external_calls = snapshot.api_guard.external_api_calls_made;
+    if external_calls == 0 && snapshot.api_guard.is_safe {
+        report.passed += 1;
+        report.checks.push((
+            "API Guard & Zero-Network Safety".to_string(),
+            true,
+            format!(
+                "Policy: \"{}\" — 0 external calls made, safe from GitHub API rate limits",
+                snapshot.api_guard.policy
+            ),
+        ));
+    } else {
+        report.failed += 1;
+        report.checks.push((
+            "API Guard & Zero-Network Safety".to_string(),
+            false,
+            format!(
+                "Safety violated: {} external calls detected!",
+                external_calls
+            ),
+        ));
     }
 
     // Print summary

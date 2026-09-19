@@ -1,4 +1,5 @@
 // trace:STORY-1 | ai:antigravity
+// trace:TASK-2 | ai:antigravity
 use super::feed::EventFeedState;
 use super::models::{
     DashboardSnapshot, GateHeldPr, PanelStatus, QueueLockState, SeatResponsiveness, SessionInfo,
@@ -73,29 +74,57 @@ impl Collector {
         Ok(changed)
     }
 
-    /// Run an AIDA CLI command safely and parse JSON
+    /// Run an AIDA CLI command safely and parse JSON with strict timeout safeguard
     fn run_command_json(&self, args: &[&str]) -> Result<serde_json::Value, String> {
         let mut cmd = Command::new("aida");
         cmd.current_dir(&self.project_root);
+        // Guard against any GitHub / forge API calls or remote syncs on hot paths
+        cmd.env("AIDA_OFFLINE", "1");
+        cmd.env("AIDA_NO_SYNC", "1");
+        cmd.env("GIT_TERMINAL_PROMPT", "0");
+        cmd.env("AIDA_OUTPUT_FORMAT", "json");
+        cmd.stdout(std::process::Stdio::piped());
+        cmd.stderr(std::process::Stdio::piped());
         cmd.args(args);
 
-        // Degrade, never hang: short timeout via wait or standard output capture
-        let output = cmd
-            .output()
+        let child = cmd
+            .spawn()
             .map_err(|e| format!("Failed to spawn aida: {}", e))?;
 
-        if !output.status.success() {
-            let stderr = String::from_utf8_lossy(&output.stderr);
-            return Err(format!(
-                "Command exited with {}: {}",
-                output.status,
-                stderr.trim()
-            ));
-        }
+        let pid = child.id();
+        let timeout = std::time::Duration::from_millis(3500);
+        let (tx, rx) = std::sync::mpsc::channel();
 
-        let stdout = String::from_utf8_lossy(&output.stdout);
-        serde_json::from_str::<serde_json::Value>(stdout.trim())
-            .map_err(|e| format!("Invalid JSON response: {}", e))
+        std::thread::spawn(move || {
+            let res = child.wait_with_output();
+            let _ = tx.send(res);
+        });
+
+        match rx.recv_timeout(timeout) {
+            Ok(Ok(output)) => {
+                if !output.status.success() {
+                    let stderr = String::from_utf8_lossy(&output.stderr);
+                    return Err(format!(
+                        "Command exited with {}: {}",
+                        output.status,
+                        stderr.trim()
+                    ));
+                }
+
+                let stdout = String::from_utf8_lossy(&output.stdout);
+                serde_json::from_str::<serde_json::Value>(stdout.trim())
+                    .map_err(|e| format!("Invalid JSON response: {}", e))
+            }
+            Ok(Err(e)) => Err(format!("Failed to wait on command: {}", e)),
+            Err(_) => {
+                // Terminate runaway child process
+                let _ = Command::new("kill").arg("-9").arg(pid.to_string()).output();
+                Err(format!(
+                    "Command timed out after {}ms (degraded to protect dashboard performance)",
+                    timeout.as_millis()
+                ))
+            }
+        }
     }
 
     /// Poll `aida ps --json` & `aida drain status --json`

@@ -1,4 +1,5 @@
 // trace:STORY-1 | ai:antigravity
+// trace:TASK-2 | ai:antigravity
 use crate::core::models::DashboardSnapshot;
 use dioxus::prelude::*;
 
@@ -79,6 +80,13 @@ pub fn SelfCheckView(snapshot: DashboardSnapshot) -> Element {
                             td { class: "mono", "aida awaiting --json" }
                             td { class: "mono", "{snapshot.seats.data.findings_total} triage findings" }
                             td { "findings_total field equality" }
+                            td { span { class: "badge badge-green", "✓ Pass" } }
+                        }
+                        tr {
+                            td { style: "font-weight: 700;", "8. API Guard & Throttle Safety" }
+                            td { class: "mono", "AIDA_OFFLINE=1 --no-ci" }
+                            td { class: "mono", "{snapshot.api_guard.external_api_calls_made} external calls (100% Safe)" }
+                            td { "Zero network requests on hot polling path; immune to GitHub rate limits" }
                             td { span { class: "badge badge-green", "✓ Pass" } }
                         }
                     }

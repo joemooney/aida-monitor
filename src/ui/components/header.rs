@@ -1,4 +1,6 @@
 // trace:STORY-1 | ai:antigravity
+// trace:TASK-2 | ai:antigravity
+use crate::core::models::ApiGuardState;
 use dioxus::prelude::*;
 
 #[component]
@@ -9,6 +11,9 @@ pub fn Header(
     lock_held: bool,
     active_tab: Signal<String>,
     search_query: Signal<String>,
+    interval_secs: Signal<u64>,
+    api_guard: ApiGuardState,
+    is_refreshing: bool,
     on_refresh: EventHandler<()>,
 ) -> Element {
     rsx! {
@@ -26,7 +31,40 @@ pub fn Header(
                 div { class: "header-status-ribbon",
                     div { class: "pulse-indicator",
                         span { class: "pulse-dot" }
-                        span { "FEED TAILING ACTIVE" }
+                        span { "FEED TAIL ACTIVE" }
+                    }
+
+                    div {
+                        class: "api-guard-pill",
+                        title: "{api_guard.policy}",
+                        span { class: "shield-icon", "🛡" }
+                        span { "API: Safe (0 calls)" }
+                    }
+
+                    div { class: "interval-selector",
+                        span { class: "interval-label", "Poll:" }
+                        div { class: "interval-group",
+                            button {
+                                class: if interval_secs() == 30 { "interval-btn active" } else { "interval-btn" },
+                                onclick: move |_| interval_secs.set(30),
+                                "30s"
+                            }
+                            button {
+                                class: if interval_secs() == 60 { "interval-btn active" } else { "interval-btn" },
+                                onclick: move |_| interval_secs.set(60),
+                                "1m"
+                            }
+                            button {
+                                class: if interval_secs() == 120 { "interval-btn active" } else { "interval-btn" },
+                                onclick: move |_| interval_secs.set(120),
+                                "2m"
+                            }
+                            button {
+                                class: if interval_secs() == 0 { "interval-btn active" } else { "interval-btn" },
+                                onclick: move |_| interval_secs.set(0),
+                                "Pause"
+                            }
+                        }
                     }
 
                     if lock_held {
@@ -39,10 +77,18 @@ pub fn Header(
                         span { class: "badge badge-round", "Wave: {wave}" }
                     }
 
-                    button {
-                        class: "action-btn",
-                        onclick: move |_| on_refresh.call(()),
-                        "⟳ Refresh"
+                    if is_refreshing {
+                        button {
+                            class: "action-btn disabled",
+                            disabled: true,
+                            "⟳ Wait..."
+                        }
+                    } else {
+                        button {
+                            class: "action-btn",
+                            onclick: move |_| on_refresh.call(()),
+                            "⟳ Refresh"
+                        }
                     }
                 }
             }

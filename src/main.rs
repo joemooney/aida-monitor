@@ -1,4 +1,5 @@
 // trace:STORY-1 | ai:antigravity
+// trace:TASK-2 | ai:antigravity
 use clap::Parser;
 use dioxus::prelude::*;
 use std::path::PathBuf;
@@ -30,8 +31,8 @@ struct CliArgs {
     #[arg(long)]
     self_check: bool,
 
-    /// Polling refresh interval in seconds for plain terminal mode (min 5s)
-    #[arg(short, long, default_value = "10")]
+    /// Polling refresh interval in seconds for plain terminal mode (default 30s, min 5s)
+    #[arg(short, long, default_value = "30")]
     interval: u64,
 }
 

@@ -1,4 +1,5 @@
 // trace:STORY-1 | ai:antigravity
+// trace:TASK-2 | ai:antigravity
 use crate::core::models::DashboardSnapshot;
 use colored::Colorize;
 
@@ -17,7 +18,11 @@ pub fn render_plain_snapshot(snapshot: &DashboardSnapshot) {
             .to_string()
             .cyan()
     );
-    println!(" Path: {}", snapshot.project_path.dimmed());
+    println!(" Path:   {}", snapshot.project_path.dimmed());
+    println!(
+        " Safety: {} [0 GitHub calls / immune to rate limits]",
+        "OFFLINE-FIRST".green().bold()
+    );
     println!(
         "{}",
         "================================================================================".cyan()

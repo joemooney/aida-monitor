@@ -1,4 +1,5 @@
 // trace:STORY-1 | ai:antigravity
+// trace:TASK-2 | ai:antigravity
 use super::components::ci_panel::CiPanel;
 use super::components::event_drawer::EventDrawer;
 use super::components::gate_panel::GatePanel;
@@ -32,40 +33,68 @@ pub fn App(props: AppProps) -> Element {
     let mut snapshot = use_signal(|| collector_cell().1.clone());
     let active_tab = use_signal(|| "overview".to_string());
     let search_query = use_signal(|| "".to_string());
+    let interval_secs = use_signal(|| 30u64);
+    let mut is_refreshing = use_signal(|| false);
+    let mut last_manual_refresh = use_signal(|| None::<std::time::Instant>);
 
     let collector_arc = collector_cell().0.clone();
 
-    // Background asynchronous polling loop (respecting polling discipline)
+    // Background asynchronous polling loop (respecting strict rate-limiting & staggered execution)
     use_future(move || {
         let col = collector_arc.clone();
         async move {
-            let mut tick_count = 0u64;
+            let mut sec_counter = 0u64;
             loop {
-                tokio::time::sleep(Duration::from_millis(1500)).await;
-                tick_count += 1;
+                tokio::time::sleep(Duration::from_secs(1)).await;
+                sec_counter += 1;
 
-                if let Ok(mut guard) = col.lock() {
-                    // 1. Fast event feed tail (every 1.5s)
-                    let _ = guard.refresh_feed();
+                let interval = interval_secs();
 
-                    // 2. Medium commands: ps & drain status (every 9s / 6 ticks)
-                    if tick_count.is_multiple_of(6) {
+                // 1. Fast zero-process event feed tail check (every 3s)
+                if sec_counter.is_multiple_of(3) {
+                    if let Ok(mut guard) = col.lock() {
+                        if let Ok(changed) = guard.refresh_feed() {
+                            if changed {
+                                let new_snap = guard.last_snapshot.clone();
+                                snapshot.set(new_snap);
+                            }
+                        }
+                    }
+                }
+
+                // If interval is paused (0), skip automated CLI subprocess polling
+                if interval == 0 {
+                    continue;
+                }
+
+                // 2. Fast subprocesses: ps & drain status (every interval seconds: default 30s or 60s)
+                if sec_counter.is_multiple_of(interval) {
+                    if let Ok(mut guard) = col.lock() {
                         guard.refresh_queue_and_lock();
+                        let new_snap = guard.last_snapshot.clone();
+                        snapshot.set(new_snap);
                     }
+                }
 
-                    // 3. At the gate: merge holds (every 18s / 12 ticks)
-                    if tick_count.is_multiple_of(12) {
+                // 3. Gate & Merge holds: every 2 * interval, staggered by interval / 3
+                let stagger_gate = (interval / 3).max(1);
+                if (sec_counter + stagger_gate).is_multiple_of(interval * 2) {
+                    if let Ok(mut guard) = col.lock() {
                         guard.refresh_merge_holds();
+                        let new_snap = guard.last_snapshot.clone();
+                        snapshot.set(new_snap);
                     }
+                }
 
-                    // 4. Slower commands: awaiting, schedule, integrate (every 30s / 20 ticks)
-                    if tick_count.is_multiple_of(20) {
+                // 4. Seats & Integrate: every 3 * interval, staggered by 2 * interval / 3
+                let stagger_heavy = ((2 * interval) / 3).max(2);
+                if (sec_counter + stagger_heavy).is_multiple_of(interval * 3) {
+                    if let Ok(mut guard) = col.lock() {
                         guard.refresh_seats();
                         guard.refresh_integrate();
+                        let new_snap = guard.last_snapshot.clone();
+                        snapshot.set(new_snap);
                     }
-
-                    let new_snap = guard.last_snapshot.clone();
-                    snapshot.set(new_snap);
                 }
             }
         }
@@ -75,10 +104,26 @@ pub fn App(props: AppProps) -> Element {
     let col_clone = collector_cell().0.clone();
 
     let on_refresh = move |_| {
+        let now = std::time::Instant::now();
+        if let Some(last) = last_manual_refresh() {
+            if now.duration_since(last) < Duration::from_secs(5) {
+                // Debounce: prevent spamming refresh within 5 seconds
+                return;
+            }
+        }
+        last_manual_refresh.set(Some(now));
+        is_refreshing.set(true);
+
         if let Ok(mut guard) = col_clone.lock() {
             let new_snap = guard.gather_full_snapshot().clone();
             snapshot.set(new_snap);
         }
+
+        let mut ref_sig = is_refreshing;
+        spawn(async move {
+            tokio::time::sleep(Duration::from_millis(600)).await;
+            ref_sig.set(false);
+        });
     };
 
     let active_wave = current.queue_lock.data.active_wave.clone();
@@ -100,6 +145,9 @@ pub fn App(props: AppProps) -> Element {
                 lock_held,
                 active_tab,
                 search_query,
+                interval_secs,
+                api_guard: current.api_guard.clone(),
+                is_refreshing: is_refreshing(),
                 on_refresh,
             }
 

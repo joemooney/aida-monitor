@@ -1,4 +1,5 @@
 // trace:STORY-1 | ai:antigravity
+// trace:TASK-2 | ai:antigravity
 
 pub const DASHBOARD_CSS: &str = r#"
 :root {
@@ -235,6 +236,86 @@ body {
 .action-btn:hover {
   background: var(--bg-surface);
   border-color: var(--color-cyan);
+}
+
+.action-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* API Guard Pill */
+.api-guard-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: #34d399;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  cursor: help;
+  transition: all 0.15s ease;
+}
+
+.api-guard-pill:hover {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.shield-icon {
+  font-size: 12px;
+}
+
+/* Interval Selector */
+.interval-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.interval-label {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.interval-group {
+  display: flex;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.interval-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.interval-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.interval-btn.active {
+  background: var(--bg-surface);
+  color: var(--color-cyan);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 /* Metric Ribbon Bar */
