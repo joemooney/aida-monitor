@@ -27,5 +27,17 @@ operations:
   timestamp: 2026-09-19T18:23:20.015731065Z
   kind: !SetStatus
     status: Completed
-clock: 3
+- id: 01a0bae9-2b4c-7370-9993-2bf2af0ade89
+  target_id: 01a0bae9-2610-7df3-816d-e5593bafa28c
+  author: aida
+  node_id: ''
+  lamport: 4
+  timestamp: 2026-09-19T18:23:58.284287526Z
+  kind: !Create
+    title: Guard against GitHub API throttling and adjust default refresh intervals
+    description: Enforce strict rate-limiting on external calls (30s-1m default intervals), offline-first flags, and zero-network hot path
+    req_type: Task
+    status: Approved
+    priority: Medium
+clock: 4
 node_id: ''

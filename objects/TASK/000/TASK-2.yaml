@@ -1,0 +1,12 @@
+id: 01a0bae9-2610-7df3-816d-e5593bafa28c
+spec_id: TASK-2
+agreed_id: TASK-2
+title: Guard against GitHub API throttling and adjust default refresh intervals
+description: Enforce strict rate-limiting on external calls (30s-1m default intervals), offline-first flags, and zero-network hot path
+status: Approved
+priority: Medium
+owner: ''
+feature: Uncategorized
+created_at: 2026-09-19T18:23:56.944118063Z
+modified_at: 2026-09-19T18:23:56.944118063Z
+req_type: Task
