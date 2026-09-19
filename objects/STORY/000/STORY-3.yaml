@@ -22,12 +22,12 @@ description: |-
   - [ ] Consecutive identical phase emissions are deduplicated before computing phase duration.
   - [ ] Funnel summary cards show entry/shelve ratios for active waves.
   - [ ] Self-check assertion verifies lane timestamps against .aida/events.jsonl.
-status: Approved
+status: InProgress
 priority: High
 owner: ''
 feature: Uncategorized
 created_at: 2026-09-19T18:56:38.958999876Z
-modified_at: 2026-09-19T20:42:07.636869942Z
+modified_at: 2026-09-19T21:06:34.031700571Z
 req_type: Story
 tags:
 - funnel
