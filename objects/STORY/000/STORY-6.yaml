@@ -15,12 +15,12 @@ description: |-
   - [ ] Visually labeled as 'Best-Effort (Agent Vendor Logs)' to indicate it is not guaranteed by core AIDA commands.
   - [ ] Degrades gracefully to empty/neutral state if .aida/headless-logs/ does not exist or format changes.
   - [ ] Never blocks UI rendering or CLI command execution.
-status: Draft
+status: Approved
 priority: Low
 owner: ''
 feature: Uncategorized
 created_at: 2026-09-19T18:57:07.964986010Z
-modified_at: 2026-09-19T18:57:07.964986010Z
+modified_at: 2026-09-19T20:17:34.384194041Z
 req_type: Story
 tags:
 - best-effort
