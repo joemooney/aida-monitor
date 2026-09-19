@@ -1,0 +1,31 @@
+id: 01a0bb07-71d2-7e71-9002-02a59faa92be
+spec_id: TASK-5
+agreed_id: TASK-5
+title: Persist feed byte cursor and generate since-you-were-away digest
+description: |-
+  ## Problem
+  1. When the monitor is stopped and restarted, re-reading the entire feed from the beginning risks re-announcing historical events as if they just happened.
+  2. An operator returning to their desk needs a concise summary of what happened while away without having to read hundreds of raw event log lines.
+
+  ## Proposed Solution
+  1. Persist a local reader cursor (.aida-monitor/cursor.json or local data dir) recording last_byte_offset and last_seen_ts.
+  2. On startup, initialize the feed tail from the end of the file or saved cursor.
+  3. Provide a 'Since You Were Away' catch-up digest summarizing all terminal events (CiTerminal, PrMerged, SpecShelved, AdvisorEscalated) since the marked timestamp.
+
+  ## Acceptance Criteria
+  - [ ] Feed tailer starts at EOF or persisted byte cursor on cold startup; does not replay historical events.
+  - [ ] Local cursor persists cleanly without modifying any target project files.
+  - [ ] 'Since You Were Away' banner/drawer displays count of merges, red CIs, and shelves since the operator's last session.
+  - [ ] Works in both Dioxus GUI and --plain terminal mode.
+status: Draft
+priority: Medium
+owner: ''
+feature: Uncategorized
+created_at: 2026-09-19T18:57:02.418829313Z
+modified_at: 2026-09-19T18:57:02.418829313Z
+req_type: Task
+tags:
+- cursor
+- digest
+- feed
+- operator
