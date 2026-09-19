@@ -1,0 +1,9 @@
+[application]
+name = "aida-monitor"
+default_platform = "desktop"
+
+[web.app]
+title = "AIDA Monitor — Operator Dashboard"
+
+[desktop]
+title = "AIDA Monitor — Operator Dashboard"

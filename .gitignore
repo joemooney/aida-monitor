@@ -57,3 +57,7 @@ docs/plans/_draft/
 # pre-approval) and personal settings. Gitignored so a committed
 # pre-approval can't become a clone-attack vector. trace:BUG-484
 .claude/settings.local.json
+
+# Rust build artifacts
+target/
+
