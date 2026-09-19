@@ -607,5 +607,51 @@ operations:
   timestamp: 2026-09-19T21:17:26.761713172Z
   kind: !SetStatus
     status: Done
-clock: 35
+- id: 01a0bb88-41ea-7b13-90d6-bc62c38ee8cb
+  target_id: 01a0bb88-3bf8-7ae0-8639-0eb838accc14
+  author: aida
+  node_id: ''
+  lamport: 36
+  timestamp: 2026-09-19T21:17:44.298715728Z
+  kind: !Create
+    title: 'auto-complete failure: phase 3 (reviewer) on STORY-9'
+    description: |
+      Auto-drafted by `aida queue work STORY-9 --auto-complete` after phase 3 (reviewer) failed. Review this BUG and promote it to Approved if it is a real AIDA orchestrator bug — or reject it if it was a user error or a local environment issue. It is intentionally left in Draft and NOT queued. (TASK-266)
+
+      ## Failure
+
+      the reviewer session exited 1 (attempt 2/2)
+
+      Failure kind: `tool-exit`
+
+      ## Recovery hint shown to the user
+
+      Address the review feedback, then push fixups: `aida queue rework STORY-9 --work`
+
+      ## Recurrence
+
+      Attempts: 1
+      Latest recurrence: 2026-09-19T21:17:42.707353283+00:00
+
+      ## Phase durations
+
+        - phase 1 (implementer): 269708 ms
+        - phase 2 (ci): 5818 ms
+        - phase 3 (reviewer): 7865 ms
+
+      ## Telemetry entry
+
+      The line appended to `~/.aida/auto-complete.jsonl` for this run:
+
+      ```json
+      {"spec_id":"STORY-9","started_at":"2026-09-19T21:12:57.682176507+00:00","completed_at":"2026-09-19T21:17:42.707353283+00:00","outcome":"failed","variant":"full","failed_phase":3,"failure_kind":"tool-exit","failure_message":"the reviewer session exited 1 (attempt 2/2)","phase_durations":[{"phase":1,"slug":"implementer","elapsed_ms":269708},{"phase":2,"slug":"ci","elapsed_ms":5818},{"phase":3,"slug":"reviewer","elapsed_ms":7865}],"total_ms":284410,"binary_sha":"b1f25b98c2"}
+      ```
+
+      ## Recurse-fix
+
+      Once triaged and promoted, this BUG can itself be driven by the orchestrator: `aida queue work <THIS-BUG> --auto-complete` — the dogfood loop TASK-266 makes operational.
+    req_type: Bug
+    status: Draft
+    priority: Medium
+clock: 36
 node_id: ''
