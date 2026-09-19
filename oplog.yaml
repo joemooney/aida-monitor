@@ -297,5 +297,32 @@ operations:
   timestamp: 2026-09-19T20:18:20.088458706Z
   kind: !SetStatus
     status: Completed
-clock: 21
+- id: 01a0bb56-547e-7ec3-b69a-f1a6a73010a6
+  target_id: 01a0bb56-5105-70f0-8209-0ed6a32225aa
+  author: aida
+  node_id: ''
+  lamport: 22
+  timestamp: 2026-09-19T20:23:12.254723410Z
+  kind: !Create
+    title: Support switching target AIDA projects via CLI and interactive UI dropdown
+    description: |-
+      ## Problem
+      Currently, monitoring a different AIDA project requires stopping the app and relaunching with an explicit `--path /absolute/path`. There is no way to switch projects from within the desktop UI, and the CLI requires full paths rather than project slugs.
+
+      ## Proposed Solution
+      1. **Registry Discovery**: Read `~/.aida/projects.toml` (the global registry written when projects are initialized with `aida init`), filtering for valid existing projects.
+      2. **CLI Convenience**: Support project names/slugs directly in `run.sh` and `aida-monitor` (e.g. `./run.sh aida` or `--project aida`), resolving against `~/.aida/projects.toml` with fallback to direct filesystem path.
+      3. **UI Project Switcher**: Add an interactive project selector dropdown in the top header ribbon, populated with registered projects from `projects.toml`.
+      4. **Hot-Switching**: When a user selects a different project from the dropdown, the collector resets its feed reader, gathers a full snapshot of the new project, and smoothly updates all panels without restarting the app.
+
+      ## Acceptance Criteria
+      - [ ] `~/.aida/projects.toml` is parsed gracefully, ignoring non-existent or temporary paths.
+      - [ ] CLI accepts either a directory path or a registered project name (e.g. `./run.sh aida`).
+      - [ ] Header includes an interactive project switcher dropdown showing available projects.
+      - [ ] Selecting a project dynamically switches all panels and the live event feed to the selected project.
+      - [ ] Maintains Prime Directive 1 (zero writes to any target project) and Directive 4 (degrade gracefully if `projects.toml` is missing or malformed).
+    req_type: Story
+    status: Approved
+    priority: Medium
+clock: 22
 node_id: ''
