@@ -21,9 +21,10 @@ priority: Medium
 owner: ''
 feature: Uncategorized
 created_at: 2026-09-19T18:56:57.168638714Z
-modified_at: 2026-09-19T20:17:27.317463957Z
+modified_at: 2026-09-19T20:42:09.142273586Z
 req_type: Story
 tags:
 - gate
 - process-attribution
 - ui
+execution_mode: drain
