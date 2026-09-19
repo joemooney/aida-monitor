@@ -1,0 +1,14 @@
+id: 01a0bb08-2ce4-7922-9b4e-090d056206fc
+spec_id: TASK-7
+agreed_id: TASK-7
+title: Add run.sh script to launch application
+description: Provide a top-level executable run.sh script to launch the application via Cargo, forwarding any CLI options.
+status: Approved
+priority: Medium
+owner: ''
+feature: Uncategorized
+created_at: 2026-09-19T18:57:50.308982154Z
+modified_at: 2026-09-19T18:57:50.308982154Z
+req_type: Task
+tags:
+- effort:open:15m

@@ -160,5 +160,17 @@ operations:
     req_type: Story
     status: Draft
     priority: Low
-clock: 10
+- id: 01a0bb08-2eae-7ab1-b719-9fb4eadd290e
+  target_id: 01a0bb08-2ce4-7922-9b4e-090d056206fc
+  author: aida
+  node_id: ''
+  lamport: 11
+  timestamp: 2026-09-19T18:57:50.766137764Z
+  kind: !Create
+    title: Add run.sh script to launch application
+    description: Provide a top-level executable run.sh script to launch the application via Cargo, forwarding any CLI options.
+    req_type: Task
+    status: Approved
+    priority: Medium
+clock: 11
 node_id: ''
