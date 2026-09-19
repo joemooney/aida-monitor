@@ -3,12 +3,12 @@ spec_id: TASK-7
 agreed_id: TASK-7
 title: Add run.sh script to launch application
 description: Provide a top-level executable run.sh script to launch the application via Cargo, forwarding any CLI options.
-status: Done
+status: Completed
 priority: Medium
 owner: ''
 feature: Uncategorized
 created_at: 2026-09-19T18:57:50.308982154Z
-modified_at: 2026-09-19T19:04:35.564411264Z
+modified_at: 2026-09-19T20:18:19.708765419Z
 req_type: Task
 tags:
 - effort:open:15m
@@ -35,3 +35,21 @@ comments:
   created_at: 2026-09-19T19:03:25.923289550Z
   modified_at: 2026-09-19T19:03:25.923289550Z
   session_id: 01a0bb0a-fdad-7dc0-bb4d-74ca5c4b5643
+history:
+- id: 01a0bb51-ddbc-70f3-bdc9-446c3df516d6
+  author: aida-auto-bump
+  timestamp: 2026-09-19T20:18:19.708711915Z
+  changes:
+  - field_name: status
+    old_value: Done
+    new_value: Completed
+processing_record:
+- id: 01a0bb51-ddbc-70f3-bdc9-447481c1ed7e
+  timestamp: 2026-09-19T20:18:19.708764722Z
+  agent: aida
+  commit_sha: 99bef06b70e0c1b93b7412df62481af7627a9e2f
+  summary: Completed via merge 99bef06b
+implementation_info:
+  implemented: false
+  completed_at: 2026-09-19T20:18:19.708583114Z
+  completion_sha: 99bef06b70e0c1b93b7412df62481af7627a9e2f
