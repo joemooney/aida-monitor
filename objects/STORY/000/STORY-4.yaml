@@ -16,7 +16,7 @@ description: |-
   - [ ] Displays recorded review verdicts via `aida review verdict <SPEC> --format json`.
   - [ ] Complies with Prime Directives 2 & 3: CLI JSON consumption only, no direct internal file reads.
   - [ ] Self-check verifies PID and held count against raw CLI JSON.
-status: InProgress
+status: Done
 priority: Medium
 owner: ''
 feature: Uncategorized
