@@ -8,7 +8,7 @@ priority: Medium
 owner: ''
 feature: Uncategorized
 created_at: 2026-09-19T18:57:50.308982154Z
-modified_at: 2026-09-19T19:00:54.433230382Z
+modified_at: 2026-09-19T19:03:25.923289550Z
 req_type: Task
 tags:
 - effort:open:15m
@@ -24,3 +24,9 @@ comments:
     - Includes traceability comment: `# trace:TASK-7 | ai:...`.
   created_at: 2026-09-19T18:57:58.598617438Z
   modified_at: 2026-09-19T18:57:58.598617438Z
+- id: 01a0bb0d-4be3-7ac3-887b-9872bbfc3c60
+  author: joe
+  content: Commit b4c15d9 references this requirement
+  created_at: 2026-09-19T19:03:25.923289550Z
+  modified_at: 2026-09-19T19:03:25.923289550Z
+  session_id: 01a0bb0a-fdad-7dc0-bb4d-74ca5c4b5643
