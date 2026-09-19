@@ -42,7 +42,7 @@ counter_scope = "global"
 # otherwise pure-git (works direct-to-default-branch; merge = git
 # ancestry + (SPEC-ID)-trailer auto-complete, no forge needed).
 [forge]
-provider = "pure-git"
+provider = "github"
 
 # trace:TASK-304 | ai:claude  (suggest_threshold: trace:TASK-697)
 # Whether AIDA proactively suggests `aida ultraplan <SPEC>` for specs
