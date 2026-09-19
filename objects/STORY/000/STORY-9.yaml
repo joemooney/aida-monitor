@@ -23,7 +23,8 @@ priority: Medium
 owner: ''
 feature: Uncategorized
 created_at: 2026-09-19T20:23:11.365924938Z
-modified_at: 2026-09-19T20:23:11.365924938Z
+modified_at: 2026-09-19T20:23:56.848888115Z
 req_type: Story
 tags:
 - effort:open:1h
+execution_mode: drain
