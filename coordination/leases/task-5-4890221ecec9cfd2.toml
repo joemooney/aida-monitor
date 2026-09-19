@@ -1,0 +1,12 @@
+scope = "TASK-5"
+node_id = "JM"
+clone_path = "/home/joe/ai/aida-monitor"
+host = "imac"
+pid = 2794346
+pid_start_time = "2026-09-19T20:55:43+00:00"
+agent = "implementer"
+started_at = "2026-09-19T20:55:44.773494509+00:00"
+heartbeat_at = "2026-09-19T20:55:44.773494509+00:00"
+ttl_secs = 1800
+process_backed = false
+review_verb = false
