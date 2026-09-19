@@ -1,0 +1,18 @@
+id: 01a0bacf-373a-7841-8a7c-c2a4d0471ff6
+spec_id: META-008
+title: bug protocol
+description: |-
+  Purpose: restore intended behavior and prevent recurrence.
+  Deliverable: a focused fix plus a regression test.
+  Before done: reproduce or characterize the failure, make the test fail before the fix where practical, and run the relevant suite.
+  Reviewer: checks the root cause, regression coverage, and blast radius.
+  Human boundary: product-policy changes are decisions, not bug fixes.
+status: Draft
+priority: Medium
+owner: ''
+feature: Uncategorized
+created_at: 2026-09-19T17:55:37.402983969Z
+modified_at: 2026-09-19T17:55:37.402983969Z
+req_type: Meta
+tags:
+- protocol:bug

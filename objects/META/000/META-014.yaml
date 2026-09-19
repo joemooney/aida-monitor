@@ -1,0 +1,15 @@
+id: 01a0bacf-373a-7841-8a7c-c30aa4a42d37
+spec_id: META-014
+title: docs lane protocol
+description: |-
+  Treat current behavior and checked examples as the source of truth.
+  Optimize for the named audience, discoverability, and resistance to drift.
+status: Draft
+priority: Medium
+owner: ''
+feature: Uncategorized
+created_at: 2026-09-19T17:55:37.402994550Z
+modified_at: 2026-09-19T17:55:37.402994550Z
+req_type: Meta
+tags:
+- protocol:lane:docs

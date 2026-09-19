@@ -1,0 +1,18 @@
+id: 01a0bacf-373a-7841-8a7c-c2c205770715
+spec_id: META-010
+title: task protocol
+description: |-
+  Purpose: complete the bounded technical or operational outcome.
+  Deliverable: the artifact or repository change named by the spec.
+  Before done: acceptance is satisfied and relevant checks pass.
+  Reviewer: checks completeness, focus, and unintended side effects.
+  Human boundary: expand scope only through a new or edited requirement.
+status: Draft
+priority: Medium
+owner: ''
+feature: Uncategorized
+created_at: 2026-09-19T17:55:37.402987990Z
+modified_at: 2026-09-19T17:55:37.402987990Z
+req_type: Meta
+tags:
+- protocol:task

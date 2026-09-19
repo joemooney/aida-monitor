@@ -1,0 +1,18 @@
+id: 01a0bacf-373a-7841-8a7c-c2e53a0e2bb1
+spec_id: META-012
+title: doc protocol
+description: |-
+  Purpose: keep the durable documentation true and useful.
+  Deliverable: the named documentation update.
+  Before done: examples and links are verified against current behavior.
+  Reviewer: checks audience fit, accuracy, discoverability, and drift risk.
+  Human boundary: policy claims require their accountable owner.
+status: Draft
+priority: Medium
+owner: ''
+feature: Uncategorized
+created_at: 2026-09-19T17:55:37.402991562Z
+modified_at: 2026-09-19T17:55:37.402991562Z
+req_type: Meta
+tags:
+- protocol:doc

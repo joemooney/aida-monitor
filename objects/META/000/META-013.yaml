@@ -1,0 +1,15 @@
+id: 01a0bacf-373a-7841-8a7c-c2fcf0cb00b2
+spec_id: META-013
+title: research lane protocol
+description: |-
+  Deliver evidence with source provenance and explicit uncertainty.
+  Do not turn findings into product or architecture decisions; surface those to the advisor.
+status: Draft
+priority: Medium
+owner: ''
+feature: Uncategorized
+created_at: 2026-09-19T17:55:37.402993144Z
+modified_at: 2026-09-19T17:55:37.402993144Z
+req_type: Meta
+tags:
+- protocol:lane:research

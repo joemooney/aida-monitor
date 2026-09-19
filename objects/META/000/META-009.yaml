@@ -1,0 +1,18 @@
+id: 01a0bacf-373a-7841-8a7c-c2b734cccf60
+spec_id: META-009
+title: story protocol
+description: |-
+  Purpose: deliver the accepted user-visible capability.
+  Deliverable: implementation and verification for every acceptance criterion.
+  Before done: acceptance is traceable to code or tests and relevant checks pass.
+  Reviewer: checks behavior, scope, compatibility, and documentation.
+  Human boundary: unresolved product or architecture forks return to the operator/advisor.
+status: Draft
+priority: Medium
+owner: ''
+feature: Uncategorized
+created_at: 2026-09-19T17:55:37.402985535Z
+modified_at: 2026-09-19T17:55:37.402985535Z
+req_type: Meta
+tags:
+- protocol:story

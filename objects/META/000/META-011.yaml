@@ -1,0 +1,18 @@
+id: 01a0bacf-373a-7841-8a7c-c2d153d2217d
+spec_id: META-011
+title: decision protocol
+description: |-
+  Purpose: make and preserve an architecture decision.
+  Deliverable: an ADR recording context, options, decision, and consequences.
+  Before done: status is accepted and references connect the decision to affected work.
+  Reviewer: checks alternatives, evidence, reversibility, and consequences.
+  Human boundary: the accountable human accepts consequential or taste-based choices.
+status: Draft
+priority: Medium
+owner: ''
+feature: Uncategorized
+created_at: 2026-09-19T17:55:37.402990069Z
+modified_at: 2026-09-19T17:55:37.402990069Z
+req_type: Meta
+tags:
+- protocol:decision
