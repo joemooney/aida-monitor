@@ -214,5 +214,34 @@ operations:
   timestamp: 2026-09-19T20:17:23.184600612Z
   kind: !SetStatus
     status: Approved
-clock: 14
+- id: 01a0bb51-1126-73d2-9762-6d6f15cb00e4
+  target_id: 01a0bb07-5d50-7b91-813d-04099e4200b7
+  author: aida
+  node_id: ''
+  lamport: 15
+  timestamp: 2026-09-19T20:17:27.334257563Z
+  kind: !SetStatus
+    status: Approved
+- id: 01a0bb51-1126-73d2-9762-6d7e1b259cfe
+  target_id: 01a0bb07-5d50-7b91-813d-04099e4200b7
+  author: aida
+  node_id: ''
+  lamport: 16
+  timestamp: 2026-09-19T20:17:27.334829507Z
+  kind: !SetDescription
+    description: |-
+      ## Problem
+      When a pull request is held at the gate (`aida merge-hold list`), an operator cannot immediately tell whether an autonomous reviewer process is actively reviewing it or has halted. Merging without this knowledge risks merging seconds before a reviewer's objection is posted.
+
+      ## Proposed Solution
+      Correlate `aida merge-hold list --json` with `aida ps --json` and `aida review verdict <SPEC> --format json` (plus `aida findings list --json`) to display reviewer process state, finding summaries, and recorded verdicts without reading internal store directories directly.
+
+      ## Acceptance Criteria
+      - [ ] At The Gate panel correlates held PR spec/branch with active sessions in `aida ps --json`.
+      - [ ] Shows live status: Reviewer Active (PID, elapsed duration) vs Idle / Awaiting Operator.
+      - [ ] Displays finding summaries via `aida findings list --json` rather than direct filesystem reads.
+      - [ ] Displays recorded review verdicts via `aida review verdict <SPEC> --format json`.
+      - [ ] Complies with Prime Directives 2 & 3: CLI JSON consumption only, no direct internal file reads.
+      - [ ] Self-check verifies PID and held count against raw CLI JSON.
+clock: 16
 node_id: ''
