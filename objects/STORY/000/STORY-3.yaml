@@ -1,0 +1,36 @@
+id: 01a0bb07-162f-76b2-9359-f39164a621b6
+spec_id: STORY-3
+agreed_id: STORY-3
+title: Visualize looping state machine swimlane and phase funnel
+description: |-
+  ## Problem
+  Traditional CI tools render pipelines as Directed Acyclic Graphs (DAGs). In AIDA, pipelines are looping state machines where shelved specs return to earlier phases (e.g. implementer after reviewer or ci failure). A 5-round spec appears as 1 neat row on a DAG, hiding that 80% of time was consumed in round trips.
+
+  ## Proposed Solution
+  1. Horizontal Swimlane Timeline:
+     - One lane per active/recent spec with an x-axis representing wall-clock time.
+     - Colored segments for each phase (implementer, ci, reviewer, integrator).
+     - Distinct loopback glyphs/markers where a SpecShelved event returned the spec to a previous phase.
+     - Deduplicate consecutive identical PhaseEntered emissions on (run_uuid, event, slug).
+  2. Wave Phase Funnel:
+     - Per active wave, display counts of specs entered, specs advanced, and specs shelved back.
+     - Answers 'where does work die' at a single glance.
+
+  ## Acceptance Criteria
+  - [ ] Swimlane view rendered in Dioxus and plain-text modes.
+  - [ ] Multi-round trips visually show horizontal width proportional to cumulative wall-clock time across all rounds.
+  - [ ] Consecutive identical phase emissions are deduplicated before computing phase duration.
+  - [ ] Funnel summary cards show entry/shelve ratios for active waves.
+  - [ ] Self-check assertion verifies lane timestamps against .aida/events.jsonl.
+status: Draft
+priority: High
+owner: ''
+feature: Uncategorized
+created_at: 2026-09-19T18:56:38.958999876Z
+modified_at: 2026-09-19T18:56:38.958999876Z
+req_type: Story
+tags:
+- funnel
+- pipeline
+- swimlane
+- ui
