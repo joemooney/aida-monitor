@@ -8,7 +8,19 @@ priority: Medium
 owner: ''
 feature: Uncategorized
 created_at: 2026-09-19T18:57:50.308982154Z
-modified_at: 2026-09-19T18:57:50.308982154Z
+modified_at: 2026-09-19T18:57:58.598617438Z
 req_type: Task
 tags:
 - effort:open:15m
+comments:
+- id: 01a0bb08-4d46-71f1-a990-213a97cb60e9
+  author: joe
+  content: |-
+    ## Acceptance Criteria
+    - Top-level executable script `run.sh` (executable permissions `chmod +x run.sh`).
+    - Resolves repository root directory so running from any subdirectory works.
+    - Passes all arguments transparently to `cargo run -- "$@"`.
+    - Uses `exec` to ensure clean process termination and signal handling.
+    - Includes traceability comment: `# trace:TASK-7 | ai:...`.
+  created_at: 2026-09-19T18:57:58.598617438Z
+  modified_at: 2026-09-19T18:57:58.598617438Z
