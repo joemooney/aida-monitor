@@ -3,7 +3,7 @@ spec_id: TASK-7
 agreed_id: TASK-7
 title: Add run.sh script to launch application
 description: Provide a top-level executable run.sh script to launch the application via Cargo, forwarding any CLI options.
-status: InProgress
+status: Done
 priority: Medium
 owner: ''
 feature: Uncategorized
